@@ -35,7 +35,7 @@ defmodule UrlShortener.Shortener do
       ** (Ecto.NoResultsError)
 
   """
-  def get_url!(id), do: Repo.get!(Url, id)
+  def get_url(id), do: Repo.get(Url, id)
 
   @doc """
   Creates a url.

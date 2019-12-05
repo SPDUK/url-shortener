@@ -21,8 +21,10 @@ defmodule UrlShortenerWeb.UrlController do
   end
 
   def show(conn, %{"id" => id}) do
-    url = Shortener.get_url!(id)
-    render(conn, "show.json", url: url)
+    case Shortener.get_url(id) do
+      nil -> redirect(conn, external: "https://www.google.com")
+      url -> redirect(conn, external: url.originalUrl)
+    end
   end
 
   def update(conn, %{"id" => id, "url" => url_params}) do
