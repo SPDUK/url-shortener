@@ -3,6 +3,7 @@ defmodule UrlShortenerWeb.UrlController do
 
   alias UrlShortener.Shortener
   alias UrlShortener.Shortener.Url
+  import Ecto
 
   action_fallback UrlShortenerWeb.FallbackController
 
@@ -12,7 +13,11 @@ defmodule UrlShortenerWeb.UrlController do
   end
 
   def create(conn, %{"url" => url_params}) do
-    with {:ok, %Url{} = url} <- Shortener.create_url(url_params) do
+    opts =
+      url_params
+      |> Map.put("urlCode", Ecto.UUID.generate())
+
+    with {:ok, %Url{} = url} <- Shortener.create_url(opts) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.url_path(conn, :show, url))
